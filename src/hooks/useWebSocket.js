@@ -12,10 +12,9 @@ export default function useWebSocket(url) {
     };
 
     socket.value.onmessage = (event) => {
-      // message.value = JSON.parse( event.data); // 将接收到的消息更新到 message
-      // console.log('Received message:', JSON.parse( event.data));
-      console.log(event)
-      return "2"
+      message.value = JSON.parse( event.data); // 将接收到的消息更新到 message
+      console.log('Received message:', JSON.parse( event.data));
+      return message
     };
 
     socket.value.onerror = (error) => {

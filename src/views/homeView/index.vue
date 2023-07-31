@@ -1,47 +1,41 @@
 <template>
   <div v-cloak class="homeView">
-    <transition name="fade-in-down">
-      <div v-if="show" key="securityMonitoring" class="securityMonitoring">
-        <securityMonitoring />
-      </div>
-    </transition>
+    <transition-group name="fade-in-down">
+      <template v-if="shouldShowComponent('securityMonitoring')" key='securityMonitoring'>
+        <securityMonitoring class="securityMonitoring" />
+      </template>
+    </transition-group>
+
   </div>
 </template>
+
 <script setup>
-import { onMounted, reactive, ref, toRefs, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import securityMonitoring from "./components/securityMonitoring";
-let show = ref(false);
-let show1 = ref(false);
-let show2 = ref(false);
-let show3 = ref(false);
-let show4 = ref(false);
+const showComponents = ref(new Set());
+const shouldShowComponent = (componentName) => {
+  return showComponents.value.has(componentName); // Access using .value
+};
+
+const animateComponent = (componentName, delay) => {
+  setTimeout(() => {
+    showComponents.value.add(componentName); // Access using .value
+  }, delay);
+};
+
 onMounted(() => {
-  show.value = true;
-  setTimeout(() => {
-    show1.value = true;
-  }, 500);
-  setTimeout(() => {
-    show2.value = true;
-  }, 1000);
-  setTimeout(() => {
-    show3.value = true;
-  }, 1500);
-  setTimeout(() => {
-    show4.value = true;
-  }, 2000);
+  animateComponent('securityMonitoring', 0);
 });
+
 onBeforeUnmount(() => {
-  show.value = false;
-  show1.value = false;
-  show2.value = false;
-  show3.value = false;
-  show4.value = false;
+  showComponents.value.clear(); // Access using .value
 });
 </script>
 <style lang="scss" scoped>
 .homeView {
   width: 100%;
   height: 100%;
+
   .securityMonitoring {
     @include bgIndex;
     left: 16px;

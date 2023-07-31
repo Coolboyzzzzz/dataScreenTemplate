@@ -1,10 +1,10 @@
 <template>
-    <div ref="chartPanel" class="chartPanel" @mouseover="mouseoverHandler" />
+    <div ref="chartPanel" class="chartPanel" />
     <div class="bc" />
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, nextTick } from 'vue'
+import { ref, onMounted, reactive, nextTick, onUnmounted } from 'vue'
 import * as echarts from 'echarts';
 import 'echarts-gl';
 const options = defineProps({
@@ -313,124 +313,129 @@ const option = getPie3D([{
         opacity: 0.5,
     }
 }], 0.75);
-onMounted(() => {
-    // 基于准备好的dom，初始化echarts实例
-    myChart = echarts.init(chartPanel.value);
-    console.log(option)
-    myChart.setOption(option);
-    // myChart.on("click", function (params) {
-    //     let isSelected = !option.series[params.seriesIndex].pieStatus.selected;
-    //     let isHovered = option.series[params.seriesIndex].pieStatus.hovered;
-    //     let k = option.series[params.seriesIndex].pieStatus.k;
-    //     let startRatio = option.series[params.seriesIndex].pieData.startRatio;
-    //     let endRatio = option.series[params.seriesIndex].pieData.endRatio;
+let isSelected;
+let isHovered;
+let startRatio;
+let endRatio;
+let k;
+const mouseoverHandler = function (params) {
+    if (hoveredIndex.value === params.seriesIndex) {
+        return;
+    } else {
+        if (hoveredIndex.value !== "") {
+            isSelected = option.series[hoveredIndex.value].pieStatus.selected;
+            isHovered = false;
+            startRatio = option.series[hoveredIndex.value].pieData.startRatio;
+            endRatio = option.series[hoveredIndex.value].pieData.endRatio;
+            k = option.series[hoveredIndex.value].pieStatus.k;
 
-    //     if (selectedIndex.value !== "" && selectedIndex.value !== params.seriesIndex) {
-    //         option.series[selectedIndex.value].parametricEquation = getParametricEquation(
-    //             option.series[selectedIndex.value].pieData.startRatio,
-    //             option.series[selectedIndex.value].pieData.endRatio,
-    //             false,
-    //             false,
-    //             k,
-    //             option.series[selectedIndex.value].pieData.value
-    //         );
-    //         option.series[selectedIndex.value].pieStatus.selected = false;
-    //     }
+            option.series[hoveredIndex.value].parametricEquation = getParametricEquation(
+                startRatio,
+                endRatio,
+                isSelected,
+                isHovered,
+                k,
+                option.series[hoveredIndex.value].pieData.value
+            );
+            option.series[hoveredIndex.value].pieStatus.hovered = isHovered;
 
-    //     option.series[params.seriesIndex].parametricEquation = getParametricEquation(
-    //         startRatio,
-    //         endRatio,
-    //         isSelected,
-    //         isHovered,
-    //         k,
-    //         option.series[params.seriesIndex].pieData.value
-    //     );
-    //     option.series[params.seriesIndex].pieStatus.selected = isSelected;
-
-    //     isSelected ? (selectedIndex.value = params.seriesIndex) : null;
-
-    //     myChart.setOption(option);
-    // });
-
-    myChart.on("mouseover", function (params) {
-        let isSelected;
-        let isHovered;
-        let startRatio;
-        let endRatio;
-        let k;
-
-        if (hoveredIndex.value === params.seriesIndex) {
-            return;
-        } else {
-            if (hoveredIndex.value !== "") {
-                isSelected = option.series[hoveredIndex.value].pieStatus.selected;
-                isHovered = false;
-                startRatio = option.series[hoveredIndex.value].pieData.startRatio;
-                endRatio = option.series[hoveredIndex.value].pieData.endRatio;
-                k = option.series[hoveredIndex.value].pieStatus.k;
-
-                option.series[hoveredIndex.value].parametricEquation = getParametricEquation(
-                    startRatio,
-                    endRatio,
-                    isSelected,
-                    isHovered,
-                    k,
-                    option.series[hoveredIndex.value].pieData.value
-                );
-                option.series[hoveredIndex.value].pieStatus.hovered = isHovered;
-
-                hoveredIndex.value = "";
-            }
-
-            if (params.seriesName !== "mouseoutSeries") {
-                isSelected = option.series[params.seriesIndex].pieStatus.selected;
-                isHovered = true;
-                startRatio = option.series[params.seriesIndex].pieData.startRatio;
-                endRatio = option.series[params.seriesIndex].pieData.endRatio;
-                k = option.series[params.seriesIndex].pieStatus.k;
-
-                option.series[params.seriesIndex].parametricEquation = getParametricEquation(
-                    startRatio,
-                    endRatio,
-                    isSelected,
-                    isHovered,
-                    k,
-                    option.series[params.seriesIndex].pieData.value + 5
-                );
-                option.series[params.seriesIndex].pieStatus.hovered = isHovered;
-
-                hoveredIndex.value = params.seriesIndex;
-            }
-
-            myChart.setOption(option);
+            hoveredIndex.value = "";
         }
-    });
 
+        if (params.seriesName !== "mouseoutSeries") {
+            isSelected = option.series[params.seriesIndex].pieStatus.selected;
+            isHovered = true;
+            startRatio = option.series[params.seriesIndex].pieData.startRatio;
+            endRatio = option.series[params.seriesIndex].pieData.endRatio;
+            k = option.series[params.seriesIndex].pieStatus.k;
 
-    // myChart.on("globalout", function () {
-    //     if (hoveredIndex.value !== "") {
-    //         isSelected = option.series[hoveredIndex.value].pieStatus.selected;
-    //         isHovered = false;
-    //         k = option.series[hoveredIndex.value].pieStatus.k;
-    //         startRatio = option.series[hoveredIndex.value].pieData.startRatio;
-    //         endRatio = option.series[hoveredIndex.value].pieData.endRatio;
+            option.series[params.seriesIndex].parametricEquation = getParametricEquation(
+                startRatio,
+                endRatio,
+                isSelected,
+                isHovered,
+                k,
+                option.series[params.seriesIndex].pieData.value + 5
+            );
+            option.series[params.seriesIndex].pieStatus.hovered = isHovered;
 
-    //         option.series[hoveredIndex.value].parametricEquation = getParametricEquation(
-    //             startRatio,
-    //             endRatio,
-    //             isSelected,
-    //             isHovered,
-    //             k,
-    //             option.series[hoveredIndex.value].pieData.value
-    //         );
-    //         option.series[hoveredIndex.value].pieStatus.hovered = isHovered;
+            hoveredIndex.value = params.seriesIndex;
+        }
 
-    //         hoveredIndex.value = "";
-    //     }
+        myChart.setOption(option);
+    }
+}
+const globaloutHandler = function () {
+    if (hoveredIndex.value !== "") {
+        isSelected = option.series[hoveredIndex.value].pieStatus.selected;
+        isHovered = false;
+        k = option.series[hoveredIndex.value].pieStatus.k;
+        startRatio = option.series[hoveredIndex.value].pieData.startRatio;
+        endRatio = option.series[hoveredIndex.value].pieData.endRatio;
 
-    //     myChart.setOption(option);
-    // });
-})
+        option.series[hoveredIndex.value].parametricEquation = getParametricEquation(
+            startRatio,
+            endRatio,
+            isSelected,
+            isHovered,
+            k,
+            option.series[hoveredIndex.value].pieData.value
+        );
+        option.series[hoveredIndex.value].pieStatus.hovered = isHovered;
+
+        hoveredIndex.value = "";
+    }
+
+    myChart.setOption(option);
+}
+const clickHandler = function (params) {
+    let isSelected = !option.series[params.seriesIndex].pieStatus.selected;
+    let isHovered = option.series[params.seriesIndex].pieStatus.hovered;
+    let k = option.series[params.seriesIndex].pieStatus.k;
+    let startRatio = option.series[params.seriesIndex].pieData.startRatio;
+    let endRatio = option.series[params.seriesIndex].pieData.endRatio;
+
+    if (selectedIndex.value !== "" && selectedIndex.value !== params.seriesIndex) {
+        option.series[selectedIndex.value].parametricEquation = getParametricEquation(
+            option.series[selectedIndex.value].pieData.startRatio,
+            option.series[selectedIndex.value].pieData.endRatio,
+            false,
+            false,
+            k,
+            option.series[selectedIndex.value].pieData.value
+        );
+        option.series[selectedIndex.value].pieStatus.selected = false;
+    }
+
+    option.series[params.seriesIndex].parametricEquation = getParametricEquation(
+        startRatio,
+        endRatio,
+        isSelected,
+        isHovered,
+        k,
+        option.series[params.seriesIndex].pieData.value
+    );
+    option.series[params.seriesIndex].pieStatus.selected = isSelected;
+
+    isSelected ? (selectedIndex.value = params.seriesIndex) : null;
+
+    myChart.setOption(option);
+}
+onUnmounted(() => {
+    myChart.off("click", clickHandler); // 解绑事件
+    myChart.off("mouseover", mouseoverHandler);
+    myChart.off("globalout", globaloutHandler);
+    myChart.dispose();
+}),
+    onMounted(() => {
+        // 基于准备好的dom，初始化echarts实例
+        myChart = echarts.init(chartPanel.value);
+        console.log(option)
+        myChart.setOption(option);
+        myChart.on("click", clickHandler);
+        myChart.on("mouseover", mouseoverHandler);
+        myChart.on("globalout", globaloutHandler);
+    })
 </script>
 
 <style lang="scss" scoped>
