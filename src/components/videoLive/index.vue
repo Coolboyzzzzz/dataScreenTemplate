@@ -6,7 +6,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
 import { initVideo } from "@/utils"
 import { ElLoading } from 'element-plus'
 import modalVideo from "@/components/modalVideo"

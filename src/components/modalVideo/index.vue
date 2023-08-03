@@ -44,7 +44,6 @@
 </template>
   
 <script setup>
-import { ref, reactive, toRefs, onMounted, nextTick, watch } from 'vue';
 import { initVideo } from "@/utils";
 import { ElLoading } from 'element-plus'
 import { setPTZControl } from "@/api/videoControl"

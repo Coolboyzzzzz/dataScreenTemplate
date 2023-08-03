@@ -1,45 +1,76 @@
 <template>
-  <div class="root" :class="[showMask == 'blue' ? 'mask-blue' : 'mask-dark']">
-    <headerTime />
-    <router-view />
-    <footMenu class="footer" :default-active="active" @change="routerChange" />
+  <div class="root" ref="rootRef" :class="[showMask == 'blue' ? 'mask-blue' : 'mask-dark']">
+    <router-view v-slot="{ Component }">
+      <transition>
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeMount, nextTick } from "vue";
-import footMenu from "@/components/footMenu";
+import resizeScale from "@/utils/resizeScale.js"
 import { useRouter } from "vue-router";
-import headerTime from '@/components/headerTime'
 const router = useRouter();
-const showMask = ref("")
+const showMask = ref("blue")
 router.beforeEach((to, from, next) => {
   // 通过 to.meta.overlay 来获取当前路由的背景遮罩状态
   const showOverlay = to.meta.overlay;
-  nextTick(() => showMask.value = showOverlay)
-  next(() => { });
+  showMask.value = showOverlay
+  next();
 })
-const active = ref(null);
-let show = ref(false);
+const show = ref(false);
+const rootRef = ref(null)
 onMounted(() => {
   show.value = true;
+  resizeScale(rootRef.value)
 });
 
-onBeforeMount(() => {
-  active.value = window.location.pathname;
-});
-let routerChange = (val) => {
-  router.push(val);
-};
 </script>
 <style scoped lang="scss">
-.footer {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 50px;
-  width: 1128px;
-  display: flex;
-  white-space: nowrap;
+.root.mask-blue {
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: -1;
+    background: url("./assets/images/bg-bg.png") 100% 100% no-repeat;
+    background-size: cover;
+  }
+}
+
+.root.mask-blue {
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: -1;
+    background: url("./assets/images/bg-all.png") no-repeat;
+    background-size: cover;
+  }
+}
+
+.root.mask-dark {
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: -1;
+    background: linear-gradient(180deg, #001A4C 0%, #000F2C 100%) 100% 100% no-repeat;
+    background-size: cover;
+  }
 }
 </style>
 <style lang="scss">
@@ -65,13 +96,13 @@ let routerChange = (val) => {
 }
 
 .fade-in-down-right-leave-from {
-  opacity: 0;
-  transform: translateX(100%);
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .fade-in-down-right-leave-to {
-  opacity: 1;
-  transform: translateX(0);
+  opacity: 0;
+  transform: translateX(-100%);
 }
 
 
@@ -112,7 +143,8 @@ let routerChange = (val) => {
 
 
 .el-loading-spinner {
-  transform: translateY(-20%);
+  margin-top: 0 !important;
+  transform: translateY(-50%);
 }
 
 .echart .watch>div:last-child {
@@ -131,3 +163,4 @@ let routerChange = (val) => {
   }
 }
 </style>
+@/utils/useScale.js

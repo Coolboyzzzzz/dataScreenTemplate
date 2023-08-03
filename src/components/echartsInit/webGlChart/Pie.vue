@@ -4,7 +4,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, nextTick, onUnmounted } from 'vue'
 import * as echarts from 'echarts';
 import 'echarts-gl';
 const options = defineProps({

@@ -1,17 +1,12 @@
 <template>
-  <div v-cloak class="homeView">
     <transition-group name="fade-in-down">
       <template v-if="shouldShowComponent('securityMonitoring')" key='securityMonitoring'>
         <securityMonitoring class="securityMonitoring" />
       </template>
     </transition-group>
-
-  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import securityMonitoring from "./components/securityMonitoring";
 const showComponents = ref(new Set());
 const shouldShowComponent = (componentName) => {
   return showComponents.value.has(componentName); // Access using .value
@@ -32,10 +27,6 @@ onBeforeUnmount(() => {
 });
 </script>
 <style lang="scss" scoped>
-.homeView {
-  width: 100%;
-  height: 100%;
-
   .securityMonitoring {
     @include bgIndex;
     left: 16px;
@@ -67,5 +58,4 @@ onBeforeUnmount(() => {
     width: 326px;
     height: 536px;
   }
-}
 </style>

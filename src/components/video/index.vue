@@ -3,8 +3,6 @@
 </template>
   
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
-
 const canvas = ref(null);
 let ctx;
 let animationFrameId;
@@ -72,8 +70,6 @@ onUnmounted(() => {
 </template>
   
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from 'vue';
-
 const canvas = ref(null);
 let ctx;
 let animationFrameId;

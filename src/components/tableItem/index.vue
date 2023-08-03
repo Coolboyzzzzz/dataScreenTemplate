@@ -6,7 +6,6 @@
   </div>
 </template>
 <script setup>
-import { computed } from 'vue';
 const props = defineProps({
   dataSource: {
     type: Array,

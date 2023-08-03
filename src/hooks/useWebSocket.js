@@ -1,5 +1,3 @@
-import { ref, onMounted, onUnmounted } from 'vue';
-
 export default function useWebSocket(url) {
   const socket = ref(null);
   const message = ref('');

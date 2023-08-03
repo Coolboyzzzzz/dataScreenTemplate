@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { ElCascader } from "element-plus";
 
 const value = ref([])
