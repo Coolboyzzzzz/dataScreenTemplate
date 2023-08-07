@@ -168,14 +168,14 @@ export async function canCallApi(api, key, interval = 24 * 60 * 60 * 1000) {
       return Promise.reject(cacheData);
     }
     // 在时间间隔内，不允许调用
-    
+
 }
 // export  function canCallApi(api, key, interval = 24 * 60 * 60 * 1000) {
 //   const timeKey = key + "Time";
 //   const dataKey = key + "Data";
 //   const lastCallTime = localStorage.getItem(timeKey);
 //   const currentTime = Date.now();
-  
+
 //   // 判断是否已经在调用接口
 //   if (localStorage.getItem("isCallingApi")) {
 //     console.log("接口正在调用中，稍后再试！");
