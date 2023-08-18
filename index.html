@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/app-loading.css" />
     <title>Vite App</title>
+    <script>
+      "object" != typeof ue || "object" != typeof ue.interface ? ("object" != typeof ue && (ue = {}), (ue.interface = {}), (ue.interface.broadcast = function (e, t) { if ("string" == typeof e) { var o = [e, ""]; void 0 !== t && (o[1] = t); var n = encodeURIComponent(JSON.stringify(o)); "object" == typeof history && "function" == typeof history.pushState ? (history.pushState({}, "", "#" + n), history.pushState({}, "", "#" + encodeURIComponent("[]"))) : ((document.location.hash = n), (document.location.hash = encodeURIComponent("[]"))) } })) : (function (e) { (ue.interface = {}), (ue.interface.broadcast = function (t, o) { "string" == typeof t && (void 0 !== o ? e.broadcast(t, JSON.stringify(o)) : e.broadcast(t, "")) }) })(ue.interface), (window.ue4 = ue.interface.broadcast); window.ue = ue;
+    //   ue4("SwitchView", JSON.stringify({ value }));
+    //   ue.interface.directionInfo = (data) => {
+    //   const res = JSON.parse(data)
+    //   direction.value = res.value
+    //  }
+    </script>
+
+
   </head>
   <body>
     <div id="app">
@@ -13,4 +23,52 @@
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
+  <style>
+    /** 白屏阶段会执行的 CSS 加载动画 */
+
+#app-loading {
+  position: relative;
+  top: 45vh;
+  margin: 0 auto;
+  color: #409eff;
+  font-size: 12px;
+}
+
+#app-loading,
+#app-loading:before,
+#app-loading:after {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  animation: 2s ease-in-out infinite app-loading-animation;
+}
+
+#app-loading:before,
+#app-loading:after {
+  content: "";
+  position: absolute;
+}
+
+#app-loading:before {
+  left: -4em;
+  animation-delay: -0.2s;
+}
+
+#app-loading:after {
+  left: 4em;
+  animation-delay: 0.2s;
+}
+
+@keyframes app-loading-animation {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2em 0 -2em;
+  }
+  40% {
+    box-shadow: 0 2em 0 0;
+  }
+}
+
+  </style>
 </html>
