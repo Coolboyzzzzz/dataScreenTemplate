@@ -23,6 +23,20 @@
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
+  <script>
+    // 设置 rem 函数
+    function setRem() {
+      const baseSize = 1920 / 100; // 将设计稿宽度除以 100，得到基准字体大小
+      const scale = document.documentElement.clientWidth / 100; // 当前屏幕宽度与设计稿宽度的比例
+      // const fontSize = baseSize * Math.min(scale, 1); // 计算实际字体大小
+      const fontSize = baseSize * Math.min(scale, 1); // 计算实际字体大小
+      document.documentElement.style.fontSize = scale + 'px';
+    }
+
+    // 在页面加载和窗口大小变化时调用 setRem 函数
+    window.addEventListener('DOMContentLoaded', setRem);
+    window.addEventListener('resize', setRem);
+  </script>
   <style>
     /** 白屏阶段会执行的 CSS 加载动画 */
 

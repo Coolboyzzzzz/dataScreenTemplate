@@ -13,12 +13,13 @@ export default function useTime() {
   // 更新时间
   function updateTime() {
     const date = new Date();
-    hours.value = date.getHours();
-    minutes.value = date.getMinutes();
-    seconds.value = date.getSeconds();
+    hours.value =String(date.getHours()).padStart(2, "0") ;
+    minutes.value =String(date.getMinutes()).padStart(2, "0");
+    seconds.value = String(date.getSeconds()).padStart(2, "0");
+    // seconds.value = String(seconds.value);
     year.value = date.getFullYear()
-    month.value = date.getMonth() + 1
-    day.value = date.getDate()
+    month.value =String(date.getMonth() + 1).padStart(2, "0")
+    day.value = String(date.getDate()).padStart(2, "0")
     week.value = "星期" + "日一二三四五六".charAt(date.getDay())
     nowTime.value = date.toLocaleString();
   }
