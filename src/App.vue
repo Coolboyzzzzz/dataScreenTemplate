@@ -1,5 +1,5 @@
 <template>
-  <div class="root" ref="rootRef" :class="[showMask == 'blue' ? 'mask-blue' : 'mask-dark']">
+  <div class="root"  :style="style" ref="rootRef" :class="[showMask == 'blue' ? 'mask-blue' : 'mask-dark']">
     <router-view v-slot="{ Component }">
       <transition>
         <component :is="Component" />
@@ -24,7 +24,9 @@ onMounted(() => {
   show.value = true;
   resizeScale(rootRef.value)
 });
-
+const style = {
+  background: import.meta.env.VITE_ENV == 'development' ? '#000' : 'none'
+}
 </script>
 <style scoped lang="scss">
 .root.mask-blue {
